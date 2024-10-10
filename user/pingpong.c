@@ -5,9 +5,6 @@
 // khởi tạo bộ nhớ đệm để write và read 1 byte
 char buffer[1];
 
-// cấu trúc pipe: 
-// 
-
 // write 1 byte
 void ping(int p[]){
     char byte = 'a';
@@ -23,12 +20,11 @@ void ping(int p[]){
 // read 1 byte 
 void pong(int p[]){
     int rs = read(p[0], buffer, 1);      // đọc 1 byte từ p[0] của pipe ra buffer
-    printf("%d: received ping\n", getpid());    // hàm getpid() để lấy process id của tiến trình đó
-
     if(rs == -1){
         fprintf(2, "read failed!!\n");
         exit(1);
     }
+    printf("%d: received ping\n", getpid());    // hàm getpid() để lấy process id của tiến trình đó
 }
 
 void pingpong(int p[]){
@@ -49,15 +45,16 @@ void pingpong(int p[]){
     }       
     else if(pid == 0){      // tiến trình con
         close(p[1]);    // đóng đầu ghi lại
-        pong(p);
+        pong(p);        // nhan byte tu cha
+        write(p[1], buffer, 1); // Gửi lại byte cho cha
         close(p[0]);    // đóng đầu đọc
         exit(0);
     }
     else{       // tiến trình cha
         close(p[0]);    // đóng đầu đọc
-        ping(p);
+        ping(p);       // gui 1 byte cho con
         wait(0);    // chờ tiến trình con kết thúc
-        read(p[1], buffer, 1);
+        read(p[0], buffer, 1);  // doc byte tu tien trinh con
         printf("%d: received pong\n", getpid());
         close(p[1]);    // đóng đầu ghi
         exit(0);
@@ -73,6 +70,5 @@ int main(int argc, char *argv[]) {
 
     int p[2]; // tạo mảng đề lưu pipe, p[0]: pipe để đọc, p[1]: pipe để ghi
     pingpong(p);
-
 
 }
