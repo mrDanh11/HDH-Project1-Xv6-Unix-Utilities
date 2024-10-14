@@ -14,11 +14,13 @@ find(char *path, char *file)
 
   // Mở thư mục, nếu không mở được thì return
   if((fd = open(path, O_RDONLY)) < 0){
+    fprintf(2, "find: cannot open %s\n", path);
     return;
   }
   // Lấy thông của thư mục vừa mở
   // Nếu không đọc được thì đóng thư mục và return
   if(fstat(fd, &st) < 0){
+    fprintf(2, "find: cannot stat %s\n", path);
     close(fd);
     return;
   }
