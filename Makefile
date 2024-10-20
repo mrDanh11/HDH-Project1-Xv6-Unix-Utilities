@@ -197,9 +197,13 @@ UPROGS=\
 	$U/_sleep\
 <<<<<<< HEAD
 	$U/_find\
+<<<<<<< HEAD
 =======
 	$U/_pingpong\
 >>>>>>> pingpong-branch
+=======
+	$U/_primes\
+>>>>>>> primes-branch
 
 
 
