@@ -2,53 +2,50 @@
 #include "kernel/stat.h"
 #include "user/user.h"
 
-int main(int argc, char *argv[]){
-   char line[200];//Chua 199 ki tu
-   int cnt_line=0;//Bien dem cua line
-   char buffer;
-   //Doc tu stdin tung byte 1 (1 ky tu) luu vao line
-   while(read(0, &buffer, 1)){
-       if(buffer != '\n'){
-           line[cnt_line]=buffer;
-           cnt_line++;
-       }else break;//Dung khi thay \n
-   }
-   //Them dau \0 cho line
-   line[cnt_line]='\0';
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        printf("Usage: %s <command> <argument>\n", argv[0]);
+        exit(1);
+    }
 
+    char line[200]; // Lưu trữ đầu vào từ stdin
+    int cnt_line = 0;
+    char buffer;
 
+    // Đọc từ stdin từng ký tự một cho đến khi gặp '\n'
+    while (read(0, &buffer, 1)) {
+        if (buffer != '\n') {
+            line[cnt_line++] = buffer;
+        } else {
+            break; // Dừng khi gặp ký tự xuống dòng '\n'
+        }
+    }
+    line[cnt_line] = '\0'; // Thêm kết thúc chuỗi
 
+    // Tạo tiến trình con
+    int pid = fork();
 
-   printf("Line: ");
-   write(1,line, cnt_line);
-   printf("\n");
+    if (pid < 0) {
+        printf("Fork failed\n");
+        exit(1);
+    }
 
+    if (pid == 0) { // Tiến trình con
+        char* args[4];
+        args[0] = argv[1]; // argv[1] là lệnh "echo"
+        args[1] = argv[2]; // argv[2] là từ "bye"
+        args[2] = line;    // Chuỗi nhập từ stdin "hello too"
+        args[3] = 0;       // Kết thúc mảng args
 
-   printf("Argv[2]: ");
-   write(1,argv[2], strlen(argv[2]));
-   printf("\n");
-
-
-   //Dung ham fork() tao tien trinh con
-   int pid = fork();
-   //Neu la tien trinh cha
-   if(pid!=0){
-       wait(0);
-       exit(0);
-   }
-   //Neu la tien trinh con
-   else if(pid == 0){
-       //Tao mang args chua cac tham so de chay ham
-       char* args[3];
-       args[0]=argv[2];
-       args[1]=line;
-       args[2]=0;
-       printf("Exec: ");
-       //argv[0] la xarg
-       //argv[1] la echo
-       //argv[2] la bye
-       exec(argv[1], args);
-       printf("exec failed\n");
-   }
+        exec(argv[1], args); // Thực thi lệnh echo với các tham số
+        printf("exec failed\n"); // Nếu exec thất bại
+        exit(1);
+    } else { // Tiến trình cha
+        wait(0); // Đợi tiến trình con hoàn thành
+        exit(0);
+    }
 }
+
+// note: trong ham exec(ten_chuong_trinh, mang_tham_so), muon chay dung thi ta can
+// truyen lenh can chay vao ptu dau tien cua mang tham so (dieu nay la bat buoc trong he thong Unix/Linux)
 
