@@ -195,7 +195,11 @@ UPROGS=\
 	$U/_wc\
 	$U/_zombie\
 	$U/_sleep\
+<<<<<<< HEAD
 	$U/_find\
+=======
+	$U/_pingpong\
+>>>>>>> pingpong-branch
 
 
 
