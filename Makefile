@@ -195,17 +195,9 @@ UPROGS=\
 	$U/_wc\
 	$U/_zombie\
 	$U/_sleep\
-<<<<<<< HEAD
-	$U/_find\
-<<<<<<< HEAD
-=======
 	$U/_pingpong\
->>>>>>> pingpong-branch
-=======
+	$U/_find\
 	$U/_primes\
->>>>>>> primes-branch
-
-
 
 
 ifeq ($(LAB),syscall)
