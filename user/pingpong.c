@@ -44,19 +44,26 @@ void pingpong(int p[]){
         exit(1);
     }       
     else if(pid == 0){      // tiến trình con
-        close(p[1]);    // đóng đầu ghi lại
         pong(p);        // nhận byte từ cha
         write(p[1], buffer, 1); // Gửi lại byte cho cha
+        
         close(p[0]);    // đóng đầu đọc
+        close(p[1]);    // đóng đầu ghi lại
         exit(0);
     }
     else{       // tiến trình cha
-        close(p[0]);    // đóng đầu đọc
         ping(p);       // gửi 1 byte cho con
         wait(0);    // chờ tiến trình con kết thúc
-        read(p[0], buffer, 1);  // đọc byte từ tiến trình con
+
+        int rs = read(p[0], buffer, 1);  // đọc byte từ tiến trình con
+        if(rs == -1){
+            fprintf(2, "read failed!!\n");
+            exit(1);
+            }
+        
         printf("%d: received pong\n", getpid());
-        close(p[1]);    // đóng đầu ghi
+        close(p[0]);    // đóng đầu đọc
+        close(p[1]);    // đóng đầu ghi lại
         exit(0);
     }
 
