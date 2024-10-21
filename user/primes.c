@@ -27,7 +27,7 @@ int primes(int in, int prime)
 
 	close(in);
 	close(out_fd[1]);
-
+    // trả về out_fd
 	return out_fd[0];
 }
 
@@ -49,9 +49,9 @@ int main(int argc, char *argv[]){
 
     int in = fd[0];
     int prime;
-    // Đọc các số từ pipe fd (thông qua biến in)
+    // Lặp qua các số từ pipe fd (thông qua biến in), tiến hành lọc số nguyên tố thông qua hàm primes
     while (read(in, &prime, sizeof(int))){
-        // In ra màn hình
+        // In ra màn hình số nguyên tố ở đầu pipe fd
         printf("prime %d\n", prime);
         // Lọc các số chia hết cho prime ở trong pipe fd (biến in), trả về số nguyên tố tiếp theo
         in = primes(in, prime);

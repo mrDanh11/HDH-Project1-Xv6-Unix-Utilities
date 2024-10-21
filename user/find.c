@@ -12,13 +12,13 @@ find(char *path, char *file)
   struct dirent de;
   struct stat st;
 
-  // Mở thư mục, nếu không mở được thì return
+  // Mở đường dẫn path, nếu không mở được thì return
   if((fd = open(path, O_RDONLY)) < 0){
     fprintf(2, "find: cannot open %s\n", path);
     return;
   }
-  // Lấy thông của thư mục vừa mở
-  // Nếu không đọc được thì đóng thư mục và return
+  // Lấy thông của đường dẫn vừa mở
+  // Nếu không đọc được thì đóng và return
   if(fstat(fd, &st) < 0){
     fprintf(2, "find: cannot stat %s\n", path);
     close(fd);
@@ -63,7 +63,7 @@ find(char *path, char *file)
         printf("%s\n", buf);
       }
       
-      // Nếu đối tượng con là thư mục
+      // Nếu đối tượng con là thư mục, gọi đệ quy vào nó
       if (st.type == T_DIR){
         find(buf, file);
       }
