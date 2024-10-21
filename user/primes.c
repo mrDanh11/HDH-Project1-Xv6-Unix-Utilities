@@ -13,6 +13,7 @@ int primes(int in, int prime)
 	pipe(out_fd);
 
 	if (!fork()) {
+        // Đọc từng số trong pipe in, số nào không chia hết cho số prime thì ghi vào out_fd
 		while (read(in, &num, sizeof(int))) {
 			if (num % prime) {
 				write(out_fd[1], &num, sizeof(int));
