@@ -1,10 +1,11 @@
+
 #include "kernel/types.h"
 #include "kernel/stat.h"
 #include "user/user.h"
 
 int main(int argc, char *argv[]) {
+    // Lệnh không hợp lệ
     if (argc < 3) {
-        printf("Usage: %s <command> <argument>\n", argv[0]);
         exit(1);
     }
 
@@ -31,7 +32,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (pid == 0) { // Tiến trình con
-        char* args[4];
+        char* args[4]; // Mảng này chứa tham số mới cho chương trình định chạy sau, ví dụ là echo
         args[0] = argv[1]; // argv[1] là lệnh "echo"
         args[1] = argv[2]; // argv[2] là từ "bye"
         args[2] = line;    // Chuỗi nhập từ stdin "hello too"
@@ -46,6 +47,5 @@ int main(int argc, char *argv[]) {
     }
 }
 
-// note: trong ham exec(ten_chuong_trinh, mang_tham_so), muon chay dung thi ta can
-// truyen lenh can chay vao ptu dau tien cua mang tham so (dieu nay la bat buoc trong he thong Unix/Linux)
-
+// Trong Linux, mảng tham số cho chương trình bên trong hàm exec phải có phần tử đầu tiên là tên chương trình cần chạy.
+// Trong ví dụ trên argv[1] là echo, args[0] cũng là echo. Điều này là do hàm exec trong Linux hoạt động như vậy.
